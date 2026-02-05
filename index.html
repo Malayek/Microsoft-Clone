@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>NeoAssist – AI Web Assistant</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root {
+      --bg: #050816;
+      --bg-soft: #0b1020;
+      --accent: #4f46e5;
+      --accent-soft: #312e81;
+      --accent-soft-2: #1e293b;
+      --border: #1f2933;
+      --text: #f9fafb;
+      --text-soft: #9ca3af;
+      --danger: #ef4444;
+      --radius-lg: 16px;
+      --radius-md: 10px;
+      --shadow-soft: 0 20px 40px rgba(15,23,42,0.85);
+      --transition: 0.2s ease;
+      --chat-width: 1000px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #1f2937 0, #020617 40%, #000 100%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+    }
+
+    .app-shell {
+      width: 100%;
+      max-width: 1200px;
+      padding: 24px 12px 32px;
+      margin: auto;
+    }
+
+    @media (min-width: 768px) {
+      .app-shell {
+        padding: 32px 16px 40px;
+      }
+    }
+
+    /* ===== FULL‑WIDTH HERO IMAGE USING laptop.jpg ===== */
+    .hero-image-section {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto 18px;
+      border-radius: 18px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 20px 40px rgba(15,23,42,0.85);
+    }
+
+    .hero-image-wrapper {
+      position: relative;
+      width: 100%;
+      min-height: 210px;
+      max-height: 360px;
+      background-image: url("laptop.jpg"); /* your business work image */
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+    }
+
+    .hero-image-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(3,7,18,0.10),
+        rgba(3,7,18,0.75)
+      );
+    }
+
+    .hero-image-caption {
+      position: absolute;
+      left: 20px;
+      bottom: 18px;
+      color: #f9fafb;
+      max-width: 340px;
+    }
+
+    .hero-image-caption-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .hero-image-caption-sub {
+      font-size: 12px;
+      color: #d1d5db;
+    }
+
+    /* Top bar / branding */
+    .top-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: conic-gradient(from 180deg, #22d3ee, #4f46e5, #a855f7, #22d3ee);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 24px rgba(59,130,246,0.6);
+    }
+
+    .brand-logo span {
+      font-weight: 700;
+      font-size: 19px;
+      color: #0b1020;
+    }
+
+    .brand-text-title {
+      font-weight: 600;
+      font-size: 18px;
+    }
+
+    .brand-text-sub {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .pill-badge {
+      padding: 6px 10px;
+      font-size: 11px;
+      border-radius: 999px;
+      border: 1px solid var(--accent-soft);
+      color: var(--text-soft);
+      background: linear-gradient(135deg, rgba(79,70,229,0.16), rgba(15,23,42,0.9));
+    }
+
+    /* Hero & layout */
+    .layout-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1.4fr;
+      gap: 18px;
+    }
+
+    @media (max-width: 960px) {
+      .layout-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .hero-card {
+      background: radial-gradient(circle at top, #111827 0, #020617 60%);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(148,163,184,0.22);
+      padding: 18px 18px 18px;
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(56,189,248,0.12), transparent 60%),
+        radial-gradient(circle at 120% 20%, rgba(129,140,248,0.14), transparent 55%);
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-title {
+      font-size: clamp(26px, 3vw, 32px);
+      line-height: 1.1;
+      margin: 4px 0 10px;
+    }
+
+    .hero-title span {
+      background: linear-gradient(to right, #38bdf8, #a855f7, #4f46e5);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .hero-sub {
+      font-size: 13px;
+      color: var(--text-soft);
+      max-width: 360px;
+      line-height: 1.5;
+    }
+
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 16px 0 18px;
+    }
+
+    .hero-tag {
+      font-size: 11px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(148,163,184,0.45);
+      color: #e5e7eb;
+    }
+
+    .hero-footer-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .hero-checklist {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .hero-checklist span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hero-checklist span i {
+      color: #22c55e;
+    }
+
+    .hero-stats {
+      font-size: 11px;
+      text-align: right;
+      color: var(--text-soft);
+    }
+
+    .hero-stats strong {
+      display: block;
+      font-size: 12px;
+      color: #e5e7eb;
+    }
+
+    /* Example prompts panel */
+    .examples-card {
+      margin-top: 16px;
+      background: linear-gradient(135deg, rgba(15,23,42,0.98), rgba(15,23,42,0.94));
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(75,85,99,0.9);
+      padding: 10px 11px;
+    }
+
+    .examples-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .examples-header span {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .examples-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .example-pill {
+      font-size: 11px;
+      padding: 7px 9px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.6);
+      border: 1px solid rgba(148,163,184,0.6);
+      color: #e5e7eb;
+      cursor: pointer;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+
+    .example-pill:hover {
+      background: rgba(79,70,229,0.5);
+      border-color: #4f46e5;
+    }
+
+    /* Right column: chat & history container */
+    .right-column {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .chat-card {
+      background: rgba(15,23,42,0.98);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(55,65,81,0.9);
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-direction: column;
+      min-height: 420px;
+    }
+
+    .chat-header {
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(31,41,55,0.95);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .chat-header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .status-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 12px rgba(34,197,94,0.7);
+    }
+
+    .chat-header-title {
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .chat-header-sub {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .chat-header-right {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .chip {
+      padding: 5px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(55,65,81,0.9);
+      font-size: 11px;
+      color: var(--text-soft);
+      cursor: default;
+    }
+
+    .chip-ghost {
+      background: rgba(15,23,42,0.9);
+    }
+
+    .chip-outline {
+      background: transparent;
+    }
+
+    /* Chat body */
+    .chat-body {
+      flex: 1;
+      padding: 12px 14px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #4b5563 transparent;
+    }
+
+    .chat-body::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .chat-body::-webkit-scrollbar-thumb {
+      background: #4b5563;
+      border-radius: 999px;
+    }
+
+    .chat-empty-state {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+
+    .chat-message {
+      max-width: 92%;
+      margin-bottom: 10px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .chat-message.user {
+      margin-left: auto;
+      flex-direction: row-reverse;
+    }
+
+    .avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      background: #020617;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      border: 1px solid rgba(75,85,99,0.8);
+    }
+
+    .chat-bubble {
+      padding: 8px 10px;
+      border-radius: 14px;
+      font-size: 13px;
+      line-height: 1.4;
+      border: 1px solid transparent;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    .chat-message.user .chat-bubble {
+      background: linear-gradient(135deg, #4f46e5, #9333ea);
+      border-color: rgba(129,140,248,0.7);
+    }
+
+    .chat-message.assistant .chat-bubble {
+      background: #020617;
+      border-color: rgba(55,65,81,0.9);
+    }
+
+    .bubble-meta {
+      margin-top: 3px;
+      font-size: 10px;
+      color: var(--text-soft);
+    }
+
+    .thinking-dots span {
+      display: inline-block;
+      width: 3px;
+      height: 3px;
+      margin-right: 3px;
+      border-radius: 999px;
+      background: #9ca3af;
+      animation: pulse 1s infinite ease-in-out;
+    }
+
+    .thinking-dots span:nth-child(2) {
+      animation-delay: 0.15s;
+    }
+
+    .thinking-dots span:nth-child(3) {
+      animation-delay: 0.3s;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.3; transform: translateY(0); }
+      50% { opacity: 1; transform: translateY(-2px); }
+    }
+
+    /* Input area */
+    .chat-input-area {
+      border-top: 1px solid rgba(31,41,55,0.9);
+      padding: 8px 10px 9px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .task-templates {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 2px;
+    }
+
+    .task-template-btn {
+      font-size: 10px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(55,65,81,0.85);
+      background: rgba(15,23,42,0.96);
+      color: var(--text-soft);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .task-template-btn:hover {
+      border-color: #4f46e5;
+      color: #e5e7eb;
+    }
+
+    .input-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+    }
+
+    .chat-input {
+      flex: 1;
+      min-height: 40px;
+      max-height: 86px;
+      resize: none;
+      border-radius: 12px;
+      border: 1px solid rgba(55,65,81,0.95);
+      background: rgba(15,23,42,0.98);
+      padding: 9px 11px;
+      color: var(--text);
+      font-size: 13px;
+      outline: none;
+      line-height: 1.4;
+    }
+
+    .chat-input:focus {
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 1px rgba(79,70,229,0.8);
+    }
+
+    .icon-button {
+      border-radius: 999px;
+      border: 1px solid rgba(55,65,81,0.95);
+      background: linear-gradient(135deg, #4f46e5, #6366f1);
+      color: white;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+      flex-shrink: 0;
+    }
+
+    .icon-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .icon-button:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 20px rgba(79,70,229,0.7);
+    }
+
+    .input-footnote {
+      font-size: 10px;
+      color: var(--text-soft);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    /* History / saved responses */
+    .history-card {
+      background: rgba(15,23,42,0.98);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(55,65,81,0.95);
+      padding: 10px 12px 11px;
+      font-size: 12px;
+    }
+
+    .history-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .history-header h3 {
+      margin: 0;
+      font-size: 12px;
+    }
+
+    .history-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .history-list {
+      max-height: 140px;
+      overflow-y: auto;
+      padding-right: 2px;
+      scrollbar-width: thin;
+      scrollbar-color: #4b5563 transparent;
+    }
+
+    .history-list::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .history-list::-webkit-scrollbar-thumb {
+      background: #4b5563;
+      border-radius: 999px;
+    }
+
+    .history-item {
+      border-radius: 10px;
+      border: 1px solid rgba(31,41,55,0.95);
+      padding: 7px 8px;
+      margin-bottom: 6px;
+      background: #020617;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 6px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .history-item:hover {
+      border-color: #4f46e5;
+      background: rgba(15,23,42,0.98);
+    }
+
+    .history-title {
+      font-size: 11px;
+      color: #e5e7eb;
+      margin-bottom: 2px;
+    }
+
+    .history-meta {
+      font-size: 10px;
+      color: var(--text-soft);
+    }
+
+    .history-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .small-btn {
+      font-size: 10px;
+      padding: 3px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(55,65,81,0.95);
+      background: rgba(15,23,42,0.98);
+      color: var(--text-soft);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .small-btn:hover {
+      border-color: #4f46e5;
+      color: #e5e7eb;
+    }
+
+    .small-btn.danger {
+      border-color: rgba(248,113,113,0.7);
+      color: #fecaca;
+    }
+
+    @media (max-width: 640px) {
+      .hero-card {
+        padding: 14px 14px 13px;
+      }
+      .chat-card {
+        min-height: 380px;
+      }
+      .history-card {
+        margin-top: 4px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- BIG BUSINESS WORK HERO IMAGE -->
+  <section class="hero-image-section" aria-label="AI assistant for business work">
+    <div class="hero-image-wrapper">
+      <div class="hero-image-overlay"></div>
+      <div class="hero-image-caption">
+        <div class="hero-image-caption-title">Supercharge your business work</div>
+        <div class="hero-image-caption-sub">
+          NeoAssist helps you plan projects, analyze data, and draft content directly from your browser.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="app-shell">
+    <!-- Top nav -->
+    <header class="top-nav">
+      <div class="brand">
+        <div class="brand-logo">
+          <span>N</span>
+        </div>
+        <div>
+          <div class="brand-text-title">NeoAssist</div>
+          <div class="brand-text-sub">AI‑powered web assistant for writing & code</div>
+        </div>
+      </div>
+      <div class="pill-badge">
+        Built with a free AI API · Client‑side demo
+      </div>
+    </header>
+
+    <main class="layout-grid">
+      <!-- Left column: homepage content -->
+      <section class="hero-card" aria-label="NeoAssist overview">
+        <div class="hero-inner">
+          <div class="pill-badge" style="margin-bottom: 6px;">
+            New · Text, tasks & code suggestions
+          </div>
+          <h1 class="hero-title">
+            Your AI copilot, reimagined as <span>NeoAssist</span>.
+          </h1>
+          <p class="hero-sub">
+            Ask questions, generate content, automate daily tasks, and get coding help in a single, minimal interface powered by an open AI model.
+          </p>
+
+          <div class="hero-tags">
+            <span class="hero-tag">Chat‑based assistant</span>
+            <span class="hero-tag">Summaries & emails</span>
+            <span class="hero-tag">Code & debugging help</span>
+            <span class="hero-tag">Saved responses</span>
+            <span class="hero-tag">100% front‑end</span>
+          </div>
+
+          <div class="hero-footer-row">
+            <div class="hero-checklist">
+              <span><i>✔</i> Real‑time chat with AI</span>
+              <span><i>✔</i> History and saved answers</span>
+              <span><i>✔</i> Task templates for common flows</span>
+            </div>
+            <div class="hero-stats">
+              <strong>Ready in your browser</strong>
+              No backend · Free API · Responsive layout
+            </div>
+          </div>
+
+          <div class="examples-card">
+            <div class="examples-header">
+              <span>Try one of these prompts</span>
+              <span style="font-size: 11px; color: var(--text-soft);">Click to fill the chat box</span>
+            </div>
+            <div class="examples-grid" id="examplePrompts">
+              <button class="example-pill">
+                Explain JavaScript promises in simple terms.
+              </button>
+              <button class="example-pill">
+                Draft a friendly email to reschedule a client meeting.
+              </button>
+              <button class="example-pill">
+                Summarize this text in 3 bullet points.
+              </button>
+              <button class="example-pill">
+                Suggest project ideas for a beginner web developer.
+              </button>
+              <button class="example-pill">
+                Help me debug this JavaScript function.
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right column: chat + history -->
+      <section class="right-column">
+        <!-- Chat card -->
+        <section class="chat-card" aria-label="NeoAssist chat interface">
+          <header class="chat-header">
+            <div class="chat-header-left">
+              <div class="status-dot"></div>
+              <div>
+                <div class="chat-header-title">Ask NeoAssist anything</div>
+                <div class="chat-header-sub">
+                  Text, tasks, and code suggestions in a Copilot‑style chat.
+                </div>
+              </div>
+            </div>
+            <div class="chat-header-right">
+              <div class="chip chip-ghost">Free model API</div>
+              <div class="chip chip-outline">History on this device</div>
+            </div>
+          </header>
+
+          <div class="chat-body" id="chatBody">
+            <div class="chat-empty-state" id="emptyState">
+              Start with a question, or choose a template below.
+            </div>
+          </div>
+
+          <footer class="chat-input-area">
+            <div class="task-templates" id="taskTemplates">
+              <button class="task-template-btn" data-prefix="Summarize the following text in 3 concise bullet points: ">
+                Summarize text
+              </button>
+              <button class="task-template-btn" data-prefix="Write a polite email: ">
+                Write an email
+              </button>
+              <button class="task-template-btn" data-prefix="Explain this piece of code step by step: ">
+                Explain code
+              </button>
+              <button class="task-template-btn" data-prefix="Generate ideas for: ">
+                Brainstorm ideas
+              </button>
+              <button class="task-template-btn" data-prefix="Refactor this code to be cleaner and more readable: ">
+                Refactor code
+              </button>
+            </div>
+            <div class="input-row">
+              <textarea id="userInput" class="chat-input" placeholder="Ask a question, request content, or paste code…" rows="1"></textarea>
+              <button id="sendButton" class="icon-button" title="Send">
+                ➤
+              </button>
+            </div>
+            <div class="input-footnote">
+              <span>Press Enter to send · Shift+Enter for a new line</span>
+              <span id="statusText">Idle</span>
+            </div>
+          </footer>
+        </section>
+
+        <!-- History / saved responses -->
+        <section class="history-card" aria-label="Chat history and saved responses">
+          <div class="history-header">
+            <h3>History & saved responses</h3>
+            <div class="history-header-actions">
+              <button class="small-btn" id="toggleHistoryView">Show saved only</button>
+              <button class="small-btn danger" id="clearHistory">Clear all</button>
+            </div>
+          </div>
+          <div class="history-list" id="historyList"></div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const API_URL = "YOUR_API_URL_HERE";
+
+    const chatBody = document.getElementById("chatBody");
+    const userInput = document.getElementById("userInput");
+    const sendButton = document.getElementById("sendButton");
+    const statusText = document.getElementById("statusText");
+    const emptyState = document.getElementById("emptyState");
+    const historyList = document.getElementById("historyList");
+    const toggleHistoryViewBtn = document.getElementById("toggleHistoryView");
+    const clearHistoryBtn = document.getElementById("clearHistory");
+
+    let messages = [];
+    let historyItems = [];
+    let showSavedOnly = false;
+    let isRequestInFlight = false;
+
+    const STORAGE_KEY_HISTORY = "neoassist_history_v1";
+
+    function loadHistoryFromStorage() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY_HISTORY);
+        if (!raw) return;
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) {
+          historyItems = parsed;
+        }
+      } catch (e) {
+        console.error("Failed to load history", e);
+      }
+      renderHistory();
+    }
+
+    function persistHistory() {
+      try {
+        localStorage.setItem(STORAGE_KEY_HISTORY, JSON.stringify(historyItems));
+      } catch (e) {
+        console.error("Failed to save history", e);
+      }
+    }
+
+    function createMessageElement(role, text, meta = "") {
+      const wrapper = document.createElement("div");
+      wrapper.className = "chat-message " + role;
+
+      const avatar = document.createElement("div");
+      avatar.className = "avatar";
+      avatar.textContent = role === "user" ? "U" : "N";
+
+      const bubble = document.createElement("div");
+      bubble.className = "chat-bubble";
+      bubble.textContent = text;
+
+      const details = document.createElement("div");
+      details.style.display = "flex";
+      details.style.flexDirection = "column";
+
+      const metaEl = document.createElement("div");
+      metaEl.className = "bubble-meta";
+      metaEl.textContent = meta;
+
+      details.appendChild(bubble);
+      details.appendChild(metaEl);
+
+      wrapper.appendChild(avatar);
+      wrapper.appendChild(details);
+
+      return wrapper;
+    }
+
+    function appendMessage(role, text) {
+      if (emptyState) {
+        emptyState.style.display = "none";
+      }
+      const meta = role === "user" ? "You · just now" : "NeoAssist · just now";
+      const el = createMessageElement(role, text, meta);
+      chatBody.appendChild(el);
+      chatBody.scrollTop = chatBody.scrollHeight;
+      messages.push({ role, content: text, createdAt: Date.now() });
+      return el;
+    }
+
+    function appendThinkingMessage() {
+      const wrapper = document.createElement("div");
+      wrapper.className = "chat-message assistant";
+
+      const avatar = document.createElement("div");
+      avatar.className = "avatar";
+      avatar.textContent = "N";
+
+      const bubble = document.createElement("div");
+      bubble.className = "chat-bubble";
+      const dots = document.createElement("div");
+      dots.className = "thinking-dots";
+      dots.innerHTML = "<span></span><span></span><span></span>";
+      bubble.appendChild(dots);
+
+      const metaEl = document.createElement("div");
+      metaEl.className = "bubble-meta";
+      metaEl.textContent = "NeoAssist is thinking…";
+
+      const details = document.createElement("div");
+      details.style.display = "flex";
+      details.style.flexDirection = "column";
+      details.appendChild(bubble);
+      details.appendChild(metaEl);
+
+      wrapper.appendChild(avatar);
+      wrapper.appendChild(details);
+
+      chatBody.appendChild(wrapper);
+      chatBody.scrollTop = chatBody.scrollHeight;
+
+      return wrapper;
+    }
+
+    function updateThinkingMessage(wrapper, text) {
+      if (!wrapper) return;
+      const bubble = wrapper.querySelector(".chat-bubble");
+      const meta = wrapper.querySelector(".bubble-meta");
+      if (bubble) bubble.textContent = text;
+      if (meta) meta.textContent = "NeoAssist · just now";
+    }
+
+    function addToHistory(userText, assistantText) {
+      const id = Date.now().toString();
+      const title = userText.slice(0, 60) + (userText.length > 60 ? "…" : "");
+      const item = {
+        id,
+        title,
+        createdAt: Date.now(),
+        userPreview: userText.slice(0, 180),
+        assistantPreview: assistantText.slice(0, 180),
+        saved: true
+      };
+      historyItems.unshift(item);
+      persistHistory();
+      renderHistory();
+    }
+
+    function renderHistory() {
+      historyList.innerHTML = "";
+      const filtered = showSavedOnly ? historyItems.filter(h => h.saved) : historyItems;
+
+      if (filtered.length === 0) {
+        const empty = document.createElement("div");
+        empty.style.color = "#6b7280";
+        empty.style.fontSize = "11px";
+        empty.textContent = showSavedOnly
+          ? "No saved responses yet."
+          : "Recent chats will appear here. Save useful answers to reuse later.";
+        historyList.appendChild(empty);
+        return;
+      }
+
+      filtered.forEach(item => {
+        const row = document.createElement("div");
+        row.className = "history-item";
+        row.dataset.id = item.id;
+
+        const info = document.createElement("div");
+        const title = document.createElement("div");
+        title.className = "history-title";
+        title.textContent = item.title;
+
+        const meta = document.createElement("div");
+        meta.className = "history-meta";
+        const date = new Date(item.createdAt);
+        meta.textContent = date.toLocaleString();
+
+        info.appendChild(title);
+        info.appendChild(meta);
+
+        const actions = document.createElement("div");
+        actions.className = "history-actions";
+
+        const reuseBtn = document.createElement("button");
+        reuseBtn.className = "small-btn";
+        reuseBtn.textContent = "Reuse";
+        reuseBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          userInput.value = item.userPreview;
+          userInput.focus();
+        });
+
+        const copyBtn = document.createElement("button");
+        copyBtn.className = "small-btn";
+        copyBtn.textContent = "Copy";
+        copyBtn.addEventListener("click", async (e) => {
+          e.stopPropagation();
+          try {
+            await navigator.clipboard.writeText(item.assistantPreview);
+            copyBtn.textContent = "Copied";
+            setTimeout(() => (copyBtn.textContent = "Copy"), 1200);
+          } catch {
+            alert("Copy failed – check clipboard permissions.");
+          }
+        });
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.className = "small-btn danger";
+        deleteBtn.textContent = "Delete";
+        deleteBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          historyItems = historyItems.filter(h => h.id !== item.id);
+          persistHistory();
+          renderHistory();
+        });
+
+        actions.appendChild(reuseBtn);
+        actions.appendChild(copyBtn);
+        actions.appendChild(deleteBtn);
+
+        row.appendChild(info);
+        row.appendChild(actions);
+
+        row.addEventListener("click", () => {
+          appendMessage("user", item.userPreview);
+          appendMessage("assistant", item.assistantPreview);
+        });
+
+        historyList.appendChild(row);
+      });
+    }
+
+    toggleHistoryViewBtn.addEventListener("click", () => {
+      showSavedOnly = !showSavedOnly;
+      toggleHistoryViewBtn.textContent = showSavedOnly ? "Show all" : "Show saved only";
+      renderHistory();
+    });
+
+    clearHistoryBtn.addEventListener("click", () => {
+      if (!confirm("Clear all history and saved responses on this device?")) return;
+      historyItems = [];
+      persistHistory();
+      renderHistory();
+    });
+
+    async function callAI(userText) {
+      const payload = {
+        inputs: userText,
+        parameters: {
+          max_new_tokens: 256,
+          temperature: 0.7
+        }
+      };
+
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        throw new Error("API error: " + response.status);
+      }
+
+      const data = await response.json();
+
+      let text = "";
+      if (Array.isArray(data) && data[0] && typeof data[0].generated_text === "string") {
+        text = data[0].generated_text;
+      } else if (data.output) {
+        text = data.output;
+      } else if (data.choices && data.choices[0].text) {
+        text = data.choices[0].text;
+      } else {
+        text = JSON.stringify(data);
+      }
+      return text.trim();
+    }
+
+    async function handleSend() {
+      const text = userInput.value.trim();
+      if (!text || isRequestInFlight) return;
+
+      isRequestInFlight = true;
+      statusText.textContent = "Thinking…";
+      sendButton.disabled = true;
+
+      appendMessage("user", text);
+      userInput.value = "";
+      const thinking = appendThinkingMessage();
+
+      try {
+        const aiText = await callAI(text);
+        chatBody.removeChild(thinking);
+        appendMessage("assistant", aiText);
+        addToHistory(text, aiText);
+        statusText.textContent = "Idle";
+      } catch (err) {
+        console.error(err);
+        updateThinkingMessage(thinking, "Sorry, something went wrong with the AI request.");
+        statusText.textContent = "Error";
+      } finally {
+        isRequestInFlight = false;
+        sendButton.disabled = false;
+        setTimeout(() => {
+          if (statusText.textContent === "Error") statusText.textContent = "Idle";
+        }, 1500);
+      }
+    }
+
+    sendButton.addEventListener("click", handleSend);
+
+    userInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        handleSend();
+      }
+    });
+
+    document.getElementById("examplePrompts").addEventListener("click", (e) => {
+      if (e.target.classList.contains("example-pill")) {
+        userInput.value = e.target.textContent.trim();
+        userInput.focus();
+      }
+    });
+
+    document.getElementById("taskTemplates").addEventListener("click", (e) => {
+      if (e.target.classList.contains("task-template-btn")) {
+        const prefix = e.target.getAttribute("data-prefix") || "";
+        userInput.value = prefix;
+        userInput.focus();
+      }
+    });
+
+    loadHistoryFromStorage();
+  </script>
+</body>
+</html>
